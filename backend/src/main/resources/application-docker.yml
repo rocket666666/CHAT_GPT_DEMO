@@ -1,0 +1,85 @@
+server:
+  port: 8089
+
+spring:
+  datasource:
+    url: jdbc:mysql://host.docker.internal:3306/ds_test?useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&autoReconnect=true&failOverReadOnly=false
+    username: ds_test
+    password: ds_test
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      connection-timeout: 60000 # 60秒
+      maximum-pool-size: 10
+      minimum-idle: 5
+      idle-timeout: 600000
+      max-lifetime: 1800000
+      initialization-fail-timeout: 30000 # 30秒内尝试连接
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQLDialect
+    naming:
+      physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+      implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+  flyway:
+    enabled: false
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+    baseline-version: 0
+  main:
+    lazy-initialization: false
+    allow-bean-definition-overriding: true
+
+# 自定义应用配置
+app:
+  sync:
+    enabled: true  # 启用数据同步功能，包括定时任务
+
+# SQL Server 数据源配置
+sqlserver:
+  datasource:
+    jdbc-url: jdbc:sqlserver://host.docker.internal:11433;databaseName=sourcedb
+    username: sa
+    password: Passw0rd
+    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+    hikari:
+      minimum-idle: 0
+      maximum-pool-size: 10
+      idle-timeout: 60000
+      max-lifetime: 1800000
+
+# JWT配置
+jwt:
+  secret: GH5J3K4L5M6N7P8QR9STUVWXY2ABCDEF01234 
+  expiration: 86400000  # 24小时
+  refresh-expiration: 604800000  # 7天
+
+# 跨域配置
+cors:
+  allowed-origins: "*"
+  allowed-methods: GET,POST,PUT,DELETE,OPTIONS
+  allowed-headers: "*"
+  allow-credentials: true
+  max-age: 3600
+
+# 日志配置
+logging:
+  level:
+    root: info
+    org.hibernate.SQL: debug
+    com.example.chatsales: debug
+    com.example.chatsales.scheduled: info  # 定时任务日志
+    org.springframework.jdbc.core: debug
+    org.springframework.scheduling: debug  # Spring定时任务框架日志
+    com.zaxxer.hikari: debug  # 添加HikariCP日志以便调试
+  file:
+    name: /app/logs/application.log  # 明确指定日志文件位置
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n" 

@@ -1,0 +1,361 @@
+<template>
+  <div class="home-container">
+    <div class="decorative-header">
+      <div class="decorative-line"></div>
+    </div>
+    
+    <!-- 顶部导航栏 -->
+    <div class="top-nav-bar">
+      <div class="system-info">
+        <h2>AI电商助手</h2>
+      </div>
+      <div class="user-info">
+        <span class="current-time">{{ currentTime }}</span>
+        <el-dropdown trigger="click">
+          <span class="user-dropdown-link">
+            <i class="el-icon-user"></i>
+            {{ username }} <i class="el-icon-arrow-down"></i>
+          </span>
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item @click="changePassword">修改密码</el-dropdown-item>
+              <el-dropdown-item @click="logout">退出登录</el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
+      </div>
+    </div>
+    
+    <div class="content-frame">
+      
+      <div class="main-content">
+        <div class="split-layout">
+          <!-- 左侧使用提示 -->
+          <div class="left-panel" :class="{ 'collapsed': isLeftPanelCollapsed }">
+            <div class="collapse-button" @click="toggleLeftPanel">
+              <el-icon>
+                <component :is="isLeftPanelCollapsed ? ArrowRight : ArrowLeft" />
+              </el-icon>
+            </div>
+            <div class="tips-section" v-show="!isLeftPanelCollapsed">
+              <h3>使用提示</h3>
+              <el-alert
+                title="通过本系统您可以："
+                type="info"
+                :closable="false"
+                show-icon>
+              </el-alert>
+              <ul class="tips-list">
+                <li>你好，我是销售助手：</li>
+                <li>如果想查询某一个产品的库存请回复商品名称，可以回复：</li>
+                <li>库存 + M5安格斯牛里脊，澳洲M5和牛牡蛎肉，等。</li>
+                <li>如果想查询临期的库存，可以回复： 临期库存 +存储方式 + 多少个月。</li>
+                <li>小助手会自动帮您查询。</li>
+              </ul>
+            </div>
+          </div>
+          
+          <!-- 右侧iframe容器 -->
+          <div class="right-panel">
+            <div class="iframe-container">
+              <iframe
+                src="http://58.34.177.234:83/chatbot/bY4bpJasWyBn603q"
+                style="width: 100%; height: 100%; min-height: 700px"
+                frameborder="0"
+                allow="microphone">
+              </iframe>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="decorative-corner top-right"></div>
+      <div class="decorative-corner bottom-left"></div>
+    </div>
+  </div>
+</template>
+
+<script>
+import { useRouter } from 'vue-router'
+import { ElMessage } from 'element-plus'
+import { ref, onMounted, onUnmounted } from 'vue'
+import PageHeader from '@/components/PageHeader.vue'
+import { ArrowLeft, ArrowRight } from '@element-plus/icons-vue'
+
+export default {
+  name: 'HomePage',
+  components: {
+    PageHeader
+  },
+  setup() {
+    const router = useRouter()
+    const username = ref(localStorage.getItem('username') || '用户')
+    const currentTime = ref('--:--:--')
+    const isLeftPanelCollapsed = ref(false)
+    let timeInterval = null
+    
+    const updateTime = () => {
+      const now = new Date()
+      const hours = now.getHours().toString().padStart(2, '0')
+      const minutes = now.getMinutes().toString().padStart(2, '0')
+      const seconds = now.getSeconds().toString().padStart(2, '0')
+      currentTime.value = `${hours}:${minutes}:${seconds}`
+    }
+    
+    onMounted(() => {
+      updateTime()
+      timeInterval = setInterval(updateTime, 1000)
+    })
+    
+    onUnmounted(() => {
+      if (timeInterval) {
+        clearInterval(timeInterval)
+      }
+    })
+    
+    const toggleLeftPanel = () => {
+      isLeftPanelCollapsed.value = !isLeftPanelCollapsed.value
+    }
+    
+    const goToSync = () => {
+      ElMessage.info('数据同步功能正在开发中')
+    }
+    
+    const goToProfitAssistant = () => {
+      router.push('/profit-assistant')
+    }
+    
+    const changePassword = () => {
+      ElMessage.info('密码修改功能正在开发中')
+    }
+    
+    const logout = () => {
+      localStorage.removeItem('isLoggedIn')
+      localStorage.removeItem('token')
+      localStorage.removeItem('username')
+      ElMessage.success('已成功退出登录')
+      router.push('/login')
+    }
+    
+    return {
+      username,
+      currentTime,
+      isLeftPanelCollapsed,
+      toggleLeftPanel,
+      goToSync,
+      goToProfitAssistant,
+      changePassword,
+      logout,
+      ArrowLeft,
+      ArrowRight
+    }
+  }
+}
+</script>
+
+<style scoped>
+.home-container {
+  padding: 0;
+  background-color: #f0f2f5;
+  background-image: linear-gradient(to bottom, rgba(18, 35, 64, 0.03) 0%, rgba(8, 21, 43, 0.01) 100%);
+  min-height: 100vh;
+  position: relative;
+}
+
+.decorative-header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 5px;
+  overflow: hidden;
+}
+
+.decorative-line {
+  height: 100%;
+  background: linear-gradient(90deg, #1e3f66 0%, #3a7bd5 50%, #1e3f66 100%);
+}
+
+/* 顶部导航栏样式 */
+.top-nav-bar {
+  background-color: #ffffff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  padding: 0 30px;
+  height: 60px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.system-info h2 {
+  margin: 0;
+  color: #1e3f66;
+  font-size: 22px;
+  font-weight: 500;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+.current-time {
+  color: #5c6a7a;
+  font-size: 14px;
+}
+
+.user-dropdown-link {
+  cursor: pointer;
+  color: #2c3e50;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.content-frame {
+  max-width: 1200px;
+  margin: 20px auto;
+  background-color: rgba(255, 255, 255, 0.5);
+  border-radius: 6px;
+  box-shadow: 0 3px 15px rgba(0, 0, 0, 0.05);
+  padding: 25px 30px;
+  position: relative;
+  border: 1px solid rgba(30, 63, 102, 0.08);
+  backdrop-filter: blur(5px);
+  overflow: hidden;
+}
+
+.decorative-corner {
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  opacity: 0.1;
+}
+
+.top-right {
+  top: 0;
+  right: 0;
+  border-right: 2px solid #3a7bd5;
+  border-top: 2px solid #3a7bd5;
+  border-top-right-radius: 6px;
+}
+
+.bottom-left {
+  bottom: 0;
+  left: 0;
+  border-left: 2px solid #3a7bd5;
+  border-bottom: 2px solid #3a7bd5;
+  border-bottom-left-radius: 6px;
+}
+
+.main-content {
+  margin-top: 20px;
+}
+
+.split-layout {
+  display: flex;
+  gap: 20px;
+  position: relative;
+}
+
+.left-panel {
+  flex: 0 0 300px;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.left-panel.collapsed {
+  flex: 0 0 30px;
+  overflow: hidden;
+}
+
+.collapse-button {
+  position: absolute;
+  right: -15px;
+  top: 20px;
+  width: 30px;
+  height: 30px;
+  background-color: #ffffff;
+  border: 1px solid #eaedf3;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.collapse-button:hover {
+  background-color: #f5f7fa;
+}
+
+.right-panel {
+  flex: 1;
+}
+
+.tips-section {
+  background-color: #ffffff;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  padding: 25px;
+  border: 1px solid #eaedf3;
+}
+
+h3 {
+  margin: 0 0 20px 0;
+  font-size: 18px;
+  color: #2c3e50;
+  font-weight: 500;
+}
+
+.tips-list {
+  padding-left: 20px;
+  margin-top: 15px;
+  margin-bottom: 25px;
+}
+
+.tips-list li {
+  margin-bottom: 10px;
+  color: #5c6a7a;
+  line-height: 1.5;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+  flex-direction: column;
+}
+
+.iframe-container {
+  background-color: #ffffff;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  padding: 0;
+  border: 1px solid #eaedf3;
+  overflow: hidden;
+  height: 100%;
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+  .split-layout {
+    flex-direction: column;
+  }
+  
+  .left-panel {
+    flex: 0 0 auto;
+  }
+  
+  .top-nav-bar {
+    padding: 0 15px;
+  }
+  
+  .content-frame {
+    padding: 20px 15px;
+  }
+}
+</style> 

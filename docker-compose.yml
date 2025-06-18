@@ -1,0 +1,16 @@
+version: '3'
+
+services:
+  # 前端服务 - 简化版本
+  frontend:
+    image: nginx:stable-alpine
+    container_name: chat-sales-frontend
+    ports:
+      - "3001:3001"  # 直接暴露3001端口
+    volumes:
+      - C:/Ai/chat_assistant/frontend/dist:/usr/share/nginx/html  # 使用Windows绝对路径
+      - C:/Ai/chat_assistant/frontend/nginx.conf:/etc/nginx/conf.d/default.conf
+      - C:/Ai/chat_assistant/logs:/var/log/nginx
+    environment:
+      - TZ=Asia/Shanghai
+    restart: unless-stopped 
