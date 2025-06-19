@@ -21,18 +21,18 @@ public class JdbcTemplateConfig {
      * @param dataSource MySQL数据源
      * @return JdbcTemplate对象
      */
-    @Bean(name = "mysqlJdbcTemplate")
-    @Primary
-    public JdbcTemplate mysqlJdbcTemplate(@Qualifier("mysqlDataSource") DataSource dataSource) {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-        // 配置JdbcTemplate，不限制查询结果行数
-        jdbcTemplate.setMaxRows(0);
-        // 设置足够长的查询超时时间（30秒）
-        jdbcTemplate.setQueryTimeout(30);
-        // 启用提取大结果集的功能
-        jdbcTemplate.setFetchSize(1000);
-        return jdbcTemplate;
-    }
+//    @Bean(name = "mysqlJdbcTemplate")
+//    @Primary
+//    public JdbcTemplate mysqlJdbcTemplate(@Qualifier("mysqlDataSource") DataSource dataSource) {
+//        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+//        // 配置JdbcTemplate，不限制查询结果行数
+//        jdbcTemplate.setMaxRows(0);
+//        // 设置足够长的查询超时时间（30秒）
+//        jdbcTemplate.setQueryTimeout(30);
+//        // 启用提取大结果集的功能
+//        jdbcTemplate.setFetchSize(1000);
+//        return jdbcTemplate;
+//    }
 
     // /**
     //  * 创建SQL Server JdbcTemplate，设置为懒加载

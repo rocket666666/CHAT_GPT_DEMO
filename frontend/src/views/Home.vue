@@ -8,13 +8,14 @@
     <div class="top-nav-bar">
       <div class="system-info">
         <h2>AI电商助手</h2>
+        <p class="subtitle">企业级AI辅助电商解决方案</p>
       </div>
       <div class="user-info">
         <span class="current-time">{{ currentTime }}</span>
         <el-dropdown trigger="click">
           <span class="user-dropdown-link">
-            <i class="el-icon-user"></i>
-            {{ username }} <i class="el-icon-arrow-down"></i>
+            <el-avatar :size="32" class="user-avatar">{{ username.charAt(0) }}</el-avatar>
+            {{ username }}
           </span>
           <template #dropdown>
             <el-dropdown-menu>
@@ -26,72 +27,108 @@
       </div>
     </div>
     
-    <div class="content-frame">
-      
-      <div class="main-content">
-        <div class="split-layout">
-          <!-- 左侧使用提示 -->
-          <div class="left-panel" :class="{ 'collapsed': isLeftPanelCollapsed }">
-            <div class="collapse-button" @click="toggleLeftPanel">
-              <el-icon>
-                <component :is="isLeftPanelCollapsed ? ArrowRight : ArrowLeft" />
-              </el-icon>
-            </div>
-            <div class="tips-section" v-show="!isLeftPanelCollapsed">
-              <h3>使用提示</h3>
-              <el-alert
-                title="通过本系统您可以："
-                type="info"
-                :closable="false"
-                show-icon>
-              </el-alert>
-              <ul class="tips-list">
-                <li>你好，我是销售助手：</li>
-                <li>如果想查询某一个产品的库存请回复商品名称，可以回复：</li>
-                <li>库存 + M5安格斯牛里脊，澳洲M5和牛牡蛎肉，等。</li>
-                <li>如果想查询临期的库存，可以回复： 临期库存 +存储方式 + 多少个月。</li>
-                <li>小助手会自动帮您查询。</li>
-              </ul>
-            </div>
+    <!-- 主要内容区域 -->
+    <div class="main-content">
+      <div class="grid-container">
+        
+        <!-- 关键词生成 -->
+        <div class="grid-item" @click="navigateTo('keyword-generation')">
+          <div class="icon-wrapper">
+            <el-icon><ChatDotRound /></el-icon>
           </div>
-          
-          <!-- 右侧iframe容器 -->
-          <div class="right-panel">
-            <div class="iframe-container">
-              <iframe
-                src="http://58.34.177.234:83/chatbot/bY4bpJasWyBn603q"
-                style="width: 100%; height: 100%; min-height: 700px"
-                frameborder="0"
-                allow="microphone">
-              </iframe>
-            </div>
+          <h3>关键词生成</h3>
+          <p>基于AI生成电商关键词</p>
+        </div>
+        
+        <!-- 产品优化描述 -->
+        <div class="grid-item" @click="navigateTo('product-description')">
+          <div class="icon-wrapper">
+            <el-icon><Edit /></el-icon>
           </div>
+          <h3>产品优化描述</h3>
+          <p>AI优化产品描述文案</p>
+        </div>
+        
+        <!-- 备货建议 -->
+        <div class="grid-item" @click="navigateTo('inventory-advice')">
+          <div class="icon-wrapper">
+            <el-icon><Box /></el-icon>
+          </div>
+          <h3>备货建议</h3>
+          <p>智能商品备货推荐</p>
+        </div>
+        
+        <!-- 利润助手 -->
+        <div class="grid-item" @click="navigateTo('profit-assistant')">
+          <div class="icon-wrapper">
+            <el-icon><Money /></el-icon>
+          </div>
+          <h3>利润助手</h3>
+          <p>AI智能利润分析</p>
+        </div>
+        
+        <!-- 库存管理 -->
+        <div class="grid-item" @click="navigateTo('inventory-management')">
+          <div class="icon-wrapper">
+            <el-icon><Files /></el-icon>
+          </div>
+          <h3>库存管理</h3>
+          <p>库存监控与转移</p>
+        </div>
+        
+        <!-- 销售助手 -->
+        <div class="grid-item" @click="navigateTo('sales-assistant')">
+          <div class="icon-wrapper">
+            <el-icon><Files /></el-icon>
+          </div>
+          <h3>销售助手</h3>
+          <p>销售辅助神器</p>
+        </div>
+
+        <!-- 帮助中心 -->
+        <div class="grid-item" @click="navigateTo('help-center')">
+          <div class="icon-wrapper">
+            <el-icon><QuestionFilled /></el-icon>
+          </div>
+          <h3>帮助中心</h3>
+          <p>使用说明与帮助</p>
         </div>
       </div>
-      
-      <div class="decorative-corner top-right"></div>
-      <div class="decorative-corner bottom-left"></div>
     </div>
   </div>
 </template>
 
 <script>
+import { ref, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
-import { ref, onMounted, onUnmounted } from 'vue'
-import PageHeader from '@/components/PageHeader.vue'
-import { ArrowLeft, ArrowRight } from '@element-plus/icons-vue'
+import {
+  Picture,
+  ChatDotRound,
+  Edit,
+  VideoCamera,
+  Box,
+  Money,
+  Files,
+  QuestionFilled
+} from '@element-plus/icons-vue'
 
 export default {
   name: 'HomePage',
   components: {
-    PageHeader
+    Picture,
+    ChatDotRound,
+    Edit,
+    VideoCamera,
+    Box,
+    Money,
+    Files,
+    QuestionFilled
   },
   setup() {
     const router = useRouter()
     const username = ref(localStorage.getItem('username') || '用户')
     const currentTime = ref('--:--:--')
-    const isLeftPanelCollapsed = ref(false)
     let timeInterval = null
     
     const updateTime = () => {
@@ -113,16 +150,8 @@ export default {
       }
     })
     
-    const toggleLeftPanel = () => {
-      isLeftPanelCollapsed.value = !isLeftPanelCollapsed.value
-    }
-    
-    const goToSync = () => {
-      ElMessage.info('数据同步功能正在开发中')
-    }
-    
-    const goToProfitAssistant = () => {
-      router.push('/profit-assistant')
+    const navigateTo = (route) => {
+      router.push(`/${route}`)
     }
     
     const changePassword = () => {
@@ -140,14 +169,9 @@ export default {
     return {
       username,
       currentTime,
-      isLeftPanelCollapsed,
-      toggleLeftPanel,
-      goToSync,
-      goToProfitAssistant,
+      navigateTo,
       changePassword,
-      logout,
-      ArrowLeft,
-      ArrowRight
+      logout
     }
   }
 }
@@ -155,207 +179,120 @@ export default {
 
 <style scoped>
 .home-container {
-  padding: 0;
-  background-color: #f0f2f5;
-  background-image: linear-gradient(to bottom, rgba(18, 35, 64, 0.03) 0%, rgba(8, 21, 43, 0.01) 100%);
   min-height: 100vh;
-  position: relative;
+  background-color: #f5f7fa;
 }
 
 .decorative-header {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 5px;
-  overflow: hidden;
+  height: 4px;
+  background: linear-gradient(90deg, #1890ff 0%, #52c41a 100%);
 }
 
-.decorative-line {
-  height: 100%;
-  background: linear-gradient(90deg, #1e3f66 0%, #3a7bd5 50%, #1e3f66 100%);
-}
-
-/* 顶部导航栏样式 */
 .top-nav-bar {
-  background-color: #ffffff;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
-  padding: 0 30px;
-  height: 60px;
+  background-color: white;
+  padding: 16px 24px;
+  box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
+.system-info {
+  display: flex;
+  flex-direction: column;
+}
+
 .system-info h2 {
   margin: 0;
   color: #1e3f66;
-  font-size: 22px;
-  font-weight: 500;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.subtitle {
+  margin: 4px 0 0;
+  color: #8c8c8c;
+  font-size: 14px;
 }
 
 .user-info {
   display: flex;
   align-items: center;
-  gap: 30px;
+  gap: 24px;
 }
 
 .current-time {
-  color: #5c6a7a;
+  color: #8c8c8c;
   font-size: 14px;
 }
 
 .user-dropdown-link {
-  cursor: pointer;
-  color: #2c3e50;
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 8px;
+  cursor: pointer;
+  color: #1e3f66;
 }
 
-.content-frame {
-  max-width: 1200px;
-  margin: 20px auto;
-  background-color: rgba(255, 255, 255, 0.5);
-  border-radius: 6px;
-  box-shadow: 0 3px 15px rgba(0, 0, 0, 0.05);
-  padding: 25px 30px;
-  position: relative;
-  border: 1px solid rgba(30, 63, 102, 0.08);
-  backdrop-filter: blur(5px);
-  overflow: hidden;
-}
-
-.decorative-corner {
-  position: absolute;
-  width: 50px;
-  height: 50px;
-  opacity: 0.1;
-}
-
-.top-right {
-  top: 0;
-  right: 0;
-  border-right: 2px solid #3a7bd5;
-  border-top: 2px solid #3a7bd5;
-  border-top-right-radius: 6px;
-}
-
-.bottom-left {
-  bottom: 0;
-  left: 0;
-  border-left: 2px solid #3a7bd5;
-  border-bottom: 2px solid #3a7bd5;
-  border-bottom-left-radius: 6px;
+.user-avatar {
+  background-color: #1890ff;
+  color: white;
 }
 
 .main-content {
-  margin-top: 20px;
+  padding: 24px;
 }
 
-.split-layout {
-  display: flex;
-  gap: 20px;
-  position: relative;
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
 }
 
-.left-panel {
-  flex: 0 0 300px;
-  transition: all 0.3s ease;
-  position: relative;
+.grid-item {
+  background: white;
+  border-radius: 8px;
+  padding: 24px;
+  text-align: center;
+  transition: all 0.3s;
+  cursor: pointer;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
 }
 
-.left-panel.collapsed {
-  flex: 0 0 30px;
-  overflow: hidden;
+.grid-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-.collapse-button {
-  position: absolute;
-  right: -15px;
-  top: 20px;
-  width: 30px;
-  height: 30px;
-  background-color: #ffffff;
-  border: 1px solid #eaedf3;
-  border-radius: 50%;
+.icon-wrapper {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 16px;
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
-  z-index: 10;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
+  border-radius: 50%;
+  background: #f0f5ff;
 }
 
-.collapse-button:hover {
-  background-color: #f5f7fa;
+.icon-wrapper .el-icon {
+  font-size: 24px;
+  color: #1890ff;
 }
 
-.right-panel {
-  flex: 1;
-}
-
-.tips-section {
-  background-color: #ffffff;
-  border-radius: 4px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-  padding: 25px;
-  border: 1px solid #eaedf3;
-}
-
-h3 {
-  margin: 0 0 20px 0;
+.grid-item h3 {
+  margin: 0 0 8px;
+  color: #1e3f66;
   font-size: 18px;
-  color: #2c3e50;
   font-weight: 500;
 }
 
-.tips-list {
-  padding-left: 20px;
-  margin-top: 15px;
-  margin-bottom: 25px;
-}
-
-.tips-list li {
-  margin-bottom: 10px;
-  color: #5c6a7a;
-  line-height: 1.5;
-}
-
-.action-buttons {
-  display: flex;
-  gap: 10px;
-  margin-top: 20px;
-  flex-direction: column;
-}
-
-.iframe-container {
-  background-color: #ffffff;
-  border-radius: 4px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-  padding: 0;
-  border: 1px solid #eaedf3;
-  overflow: hidden;
-  height: 100%;
-}
-
-/* 响应式调整 */
-@media (max-width: 768px) {
-  .split-layout {
-    flex-direction: column;
-  }
-  
-  .left-panel {
-    flex: 0 0 auto;
-  }
-  
-  .top-nav-bar {
-    padding: 0 15px;
-  }
-  
-  .content-frame {
-    padding: 20px 15px;
-  }
+.grid-item p {
+  margin: 0;
+  color: #8c8c8c;
+  font-size: 14px;
 }
 </style> 

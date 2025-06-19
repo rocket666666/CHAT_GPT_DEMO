@@ -5,40 +5,20 @@
     </div>
     
     <div class="content-frame">
+      <back-button />
       <page-header 
         title="利润助手" 
         subtitle="AI智能利润分析工具"
       />
       
       <div class="main-content">
-        <div class="intro-section">
-          <p>利用AI技术，分析您的销售数据、库存状况和定价策略，为您提供最优化的利润方案。</p>
-        </div>
-        
         <div class="iframe-container">
-          <iframe
-            src="http://localhost/chatbot/GtrMfxVGYJriNv6S"
-            style="width: 100%; height: 100%; min-height: 700px"
-            frameborder="0"
+          <iframe 
+            src="http://localhost/chatbot/3qLGCOZ5UkuClE2B" 
+            style="width: 100%; height: 100%; min-height: 700px" 
+            frameborder="0" 
             allow="microphone">
           </iframe>
-        </div>
-        
-        <div class="tips-section">
-          <h3>使用提示</h3>
-          <el-alert
-            title="您可以向AI助手询问以下问题："
-            type="info"
-            :closable="false"
-            show-icon>
-          </el-alert>
-          <ul class="tips-list">
-            <li>"分析最近30天内利润最高的10个产品"</li>
-            <li>"哪些商品的库存成本过高？"</li>
-            <li>"我的定价策略是否合理？"</li>
-            <li>"如何优化我的产品组合以提高整体利润？"</li>
-            <li>"预测下个月的销售趋势和利润"</li>
-          </ul>
         </div>
       </div>
       
@@ -50,11 +30,13 @@
 
 <script>
 import PageHeader from '@/components/PageHeader.vue'
+import BackButton from '@/components/BackButton.vue'
 
 export default {
   name: 'ProfitAssistant',
   components: {
-    PageHeader
+    PageHeader,
+    BackButton
   }
 }
 </script>
@@ -125,21 +107,6 @@ export default {
   gap: 30px;
 }
 
-.intro-section {
-  background-color: #ffffff;
-  border-radius: 4px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-  padding: 25px;
-  border: 1px solid #eaedf3;
-}
-
-.intro-section p {
-  margin: 0;
-  color: #5c6a7a;
-  line-height: 1.6;
-  font-size: 16px;
-}
-
 .iframe-container {
   background-color: #ffffff;
   border-radius: 4px;
@@ -147,32 +114,8 @@ export default {
   padding: 0;
   border: 1px solid #eaedf3;
   overflow: hidden;
-}
-
-.tips-section {
-  background-color: #ffffff;
-  border-radius: 4px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-  padding: 25px;
-  border: 1px solid #eaedf3;
-}
-
-h3 {
-  margin: 0 0 20px 0;
-  font-size: 18px;
-  color: #2c3e50;
-  font-weight: 500;
-}
-
-.tips-list {
-  padding-left: 20px;
-  margin-top: 15px;
-}
-
-.tips-list li {
-  margin-bottom: 10px;
-  color: #5c6a7a;
-  line-height: 1.5;
+  width: 100%;
+  height: 750px;
 }
 
 /* 响应式调整 */
@@ -182,10 +125,6 @@ h3 {
   }
   
   .content-frame {
-    padding: 20px 15px;
-  }
-  
-  .intro-section, .tips-section {
     padding: 20px 15px;
   }
 }

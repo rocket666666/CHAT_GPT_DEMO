@@ -1,12 +1,9 @@
-import axios from 'axios';
-
-//const API_URL = 'http://localhost:8089/api/auth';
-const API_URL = 'http://58.34.177.234:8089/api/auth';
+import api, { API_ENDPOINTS } from './config';
 
 const authApi = {
   // 用户登录
   login(username, password, rememberMe = false) {
-    return axios.post(`${API_URL}/login`, {
+    return api.post(API_ENDPOINTS.auth.login, {
       username,
       password,
       rememberMe
@@ -15,7 +12,7 @@ const authApi = {
 
   // 用户注册
   register(username, password) {
-    return axios.post(`${API_URL}/register`, {
+    return api.post(API_ENDPOINTS.auth.register, {
       username,
       password
     });
@@ -23,17 +20,17 @@ const authApi = {
 
   // 刷新令牌
   refreshToken(refreshToken) {
-    return axios.post(`${API_URL}/refresh-token`, { refreshToken });
+    return api.post(API_ENDPOINTS.auth.refreshToken, { refreshToken });
   },
 
   // 验证令牌
   validateToken(token) {
-    return axios.get(`${API_URL}/validate-token?token=${token}`);
+    return api.get(`${API_ENDPOINTS.auth.validateToken}?token=${token}`);
   },
 
   // 初始化管理员账户(仅开发环境)
   initAdmin() {
-    return axios.post(`${API_URL}/init-admin`);
+    return api.post(API_ENDPOINTS.auth.initAdmin);
   },
 
   // 获取当前存储的令牌
@@ -65,7 +62,6 @@ const authApi = {
     localStorage.removeItem('token');
     localStorage.removeItem('username');
     localStorage.removeItem('isLoggedIn');
-    // 保留记住的用户名，除非显式清除
   },
 
   // 检查是否已登录

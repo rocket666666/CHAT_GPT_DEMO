@@ -94,7 +94,7 @@ export default {
     onMounted(() => {
       // 检查是否已登录
       if (authApi.isLoggedIn()) {
-        router.replace('/')
+        router.replace('/home')
         return
       }
       
@@ -127,12 +127,10 @@ export default {
           
           authApi.login(loginForm.username, loginForm.password, rememberMe.value)
             .then(response => {
-              const data = response.data
-              
-              if (data.success) {
+              if (response.success) {
                 // 存储认证令牌
-                authApi.saveToken(data.token)
-                authApi.saveUser(data.username)
+                authApi.saveToken(response.token)
+                authApi.saveUser(response.username)
                 
                 // 如果选择了记住我，保存用户名
                 if (rememberMe.value) {
@@ -143,31 +141,32 @@ export default {
                 
                 // 显示欢迎消息
                 ElMessage({
-                  message: data.message || '登录成功，欢迎回来！',
+                  message: response.message || '登录成功，欢迎回来！',
                   type: 'success',
                   duration: 2000
                 })
                 
                 // 如果有提示密码即将过期，显示提醒
-                if (data.passwordExpiring) {
+                if (response.password_expiring) {
                   ElMessage({
-                    message: data.message,
+                    message: response.message,
                     type: 'warning',
                     duration: 5000
                   })
                 }
                 
                 // 跳转到首页
-                router.push('/')
+                router.push('/home')
               } else {
                 // 登录失败
                 ElMessage({
-                  message: data.message || '用户名或密码错误',
+                  message: response.message || '用户名或密码错误',
                   type: 'error'
                 })
               }
             })
             .catch(error => {
+              console.error('Login error:', error)
               let errorMessage = '登录失败'
               
               if (error.response && error.response.data) {

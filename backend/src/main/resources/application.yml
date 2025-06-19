@@ -1,9 +1,11 @@
 server:
   port: 8089
+  servlet:
+    context-path: /chat_gpt_demo  # 明确设置上下文路径为根目录
 
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/ds_test?useSSL=false&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://localhost:3306/ds_test?useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
     username: ds_test
     password: ds_test
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -29,12 +31,10 @@ spring:
     lazy-initialization: false  # 全局懒加载设置为false
     allow-bean-definition-overriding: true
 
-custom-datasource:
-  mysql:
-    jdbcUrl: jdbc:mysql://localhost:3306/ds_test?useSSL=false&serverTimezone=Asia/Shanghai
-    username: ds_test
-    password: ds_test
-    driver-class-name: com.mysql.cj.jdbc.Driver
+# DeepSeek API配置
+deepseek:
+  api-key: ${DEEPSEEK_API_KEY:sk-93432e44cb8545a78ebc85b718157109}
+  model: deepseek-chat
 
 # JWT配置
 jwt:

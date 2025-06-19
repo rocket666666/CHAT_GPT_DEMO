@@ -1,8 +1,8 @@
 <template>
-  <div class="loading-container" :class="{ 'fullscreen': fullscreen }">
+  <div :class="['loading-container', { 'fullscreen': fullscreen }]">
     <div class="loading-content">
       <div class="loading-spinner">
-        <div class="spinner-ring"></div>
+        <div class="spinner"></div>
       </div>
       <div class="loading-text">{{ text }}</div>
     </div>
@@ -30,7 +30,8 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 20px;
+  background-color: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(2px);
 }
 
 .loading-container.fullscreen {
@@ -39,44 +40,37 @@ export default {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(2px);
   z-index: 9999;
+  background-color: rgba(255, 255, 255, 0.95);
 }
 
 .loading-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  text-align: center;
+  padding: 30px;
 }
 
 .loading-spinner {
-  width: 50px;
-  height: 50px;
-  margin-bottom: 15px;
+  margin-bottom: 20px;
 }
 
-.spinner-ring {
-  width: 100%;
-  height: 100%;
-  border: 3px solid transparent;
-  border-top-color: var(--primary-color, #3a7bd5);
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #e4e7ed;
+  border-top: 4px solid #409eff;
   border-radius: 50%;
   animation: spin 1s linear infinite;
+  margin: 0 auto;
 }
 
 .loading-text {
-  font-size: 16px;
-  color: var(--primary-dark, #1e3f66);
+  color: #606266;
+  font-size: 14px;
   font-weight: 500;
 }
 
 @keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 </style> 
